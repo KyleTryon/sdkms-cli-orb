@@ -1,4 +1,4 @@
-Easily install the Fortanix SDKMS SDKMS CLI in your CircleCI jobs.
+An orb for using Fortanix SDKMS for your secrets, key management and cryptographic needs in your CircleCI jobs.
 
 ## Usage
 
@@ -6,7 +6,7 @@ See [this orb's listing in CircleCI's Orbs Registry](https://circleci.com/orbs/r
 
 ## Example
 
-In this example `config.yml` snippet, the required SDKMS parameter (API endpoint) and secret (API Key)  are stored, via [Contexts](https://circleci.com/docs/2.0/contexts), as environment variables in the `sdkms` context and then read as default parameter values by the `aws-cli/configure` command.
+In this example `config.yml` snippet, the required SDKMS parameter (API endpoint) and secret (API Key)  are stored, via [Contexts](https://circleci.com/docs/2.0/contexts), as environment variables in the `sdkms` context and then read as default parameter values by the `sdkms-cli` commands.
 
 ```yaml
 version: 2.1
