@@ -7,6 +7,41 @@ orbs:
   sdkms-cli: ffaruqui_sandbox/sdkms-cli@dev:alpha
   orb-tools: circleci/orb-tools@8.27.3
 
+executors:
+  ci-base:
+    resource_class: small
+    docker:
+      - image: cibuilds/base
+jobs:
+  gettest:
+    executor: ci-base
+    steps:
+      - run: exit 0
+      - sdkms-cli/install
+      - sdkms-cli/authenticate:
+          api-endpoint: "https://sdkms.fortanix.com"
+          api-key: "YzA3ZDM2MDctODljMC00MmNlLTliMDktMDlhMGVkODVhM2FkOkJUQVJ\"
+              \"sS3ZfdnFxN1AyMnZsNlRxMFBSX0ZJNVN1WVE5YXl3a1FzMHNIOGppVkJvWE1\"
+              \"xUUpHajJQdldYZDNVR3MxUGowcVlfbDhubWJVQkJoeGE2MlBR"
+      - sdkms-cli/get-secret:
+          api-endpoint: "https://sdkms.fortanix.com"
+          secret-name: "ci-test-secret"
+          secret-file: ""
+      - sdkms-cli/logout
+
+# yaml anchor filters
+integration-dev_filters: &integration-dev_filters
+  branches:
+    ignore: /.*/
+  tags:
+    only: /integration-.*/
+
+integration-master_filters: &integration-master_filters
+  branches:
+    ignore: /.*/
+  tags:
+    only: /master-.*/
+
 workflows:
   # this `lint-pack_validate_publish-dev` workflow will run on any commit
   lint-pack_validate_publish-dev:
@@ -55,6 +90,13 @@ workflows:
           filters:
             branches:
               only: master
+
+  integration_tests-prod_deploy:
+    jobs:
+      # triggered by non-master branch commits
+      - gettest:
+          name: gettest-dev
+          filters: *integration-dev_filters
 
   # this `integration-tests_prod-release` workflow will ignore commits
   # it is only triggered by git tags, which are created in the job above
@@ -108,16 +150,3 @@ workflows:
   #             ignore: /.*/
   #           tags:
   #             only: /master-major.*/
-
-# yaml anchor filters
-integration-dev_filters: &integration-dev_filters
-  branches:
-    ignore: /.*/
-  tags:
-    only: /integration-.*/
-
-integration-master_filters: &integration-master_filters
-  branches:
-    ignore: /.*/
-  tags:
-    only: /master-.*/
