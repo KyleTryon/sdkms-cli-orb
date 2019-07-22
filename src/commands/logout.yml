@@ -1,0 +1,11 @@
+description: Terminate authentication session with SDKMS
+parameters:
+  api-endpoint:
+    type: string
+    default: "https://sdkms.fortanix.com"
+    description: "SDKMS API Endpoint"
+steps:
+  - run:
+      name: App logout from SDKMS
+      command: |
+          sdkms-cli --api-endpoint <<parameters.api-endpoint>> app-logout
